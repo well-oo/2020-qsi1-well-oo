@@ -83,3 +83,43 @@ let scoreWhenPoints = (current, winner) =>
       otherPlayerPoint: current |> pointFor(other(winner))
     })
   };
+
+let scoreWhenGame = winner => Game(winner);  
+
+let score = (current, winner) =>
+switch current {
+| Points(p) => scoreWhenPoints(p, winner)
+| Forty(f) => scoreWhenForty(f, winner)
+| Deuce => scoreWhenDeuce(winner)
+| Advantage(a) => scoreWhenAdvantage(a, winner)
+| Game(g) => scoreWhenGame(g)
+};
+
+let newGame = Points({playerOne: Love, playerTwo: Love});
+
+let string_of_player : (player) => string = player =>
+switch player {
+| PlayerOne => "I'm PlayerOne"
+| PlayerTwo => "I'm PlayerTwo"
+};
+
+let string_of_point : (point) => string = point =>
+switch point {
+  | Love => "Love"
+  | Fifteen => "Fifteen points"
+  | Thirty => "Thirty points";
+
+};
+
+ 
+let string_of_score : (score) => string = score =>
+switch score {
+| Points(pointsData) => "Player one has " ++ string_of_point(pointsData.playerOne) ++ " and player two has " ++  string_of_point(pointsData.playerTwo)
+| Forty(fortyData) => switch fortyData.player {
+  | PlayerOne=> string_of_player(PlayerOne) ++ " with 40 points, " ++ "I'm playerTwo with " ++ string_of_point(fortyData.otherPlayerPoint);
+  | PlayerTwo=> string_of_player(PlayerTwo) ++ " with 40 points, " ++ "I'm playerOne with " ++ string_of_point(fortyData.otherPlayerPoint);
+}
+| Deuce => "Deuce between the two players!"
+| Advantage(player) => string_of_player(player) ++ " and I've the advantage"
+| Game(player) =>string_of_player(player) ++ " and I win the game" ;
+};
